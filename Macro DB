@@ -1,0 +1,238 @@
+Sub Przycisk3_Kliknięcie()
+
+
+'deklaracje zmiennych
+ Dim sFileName As String
+ Dim intFH As Integer
+ Dim counter As Integer
+ Dim licznik As Integer
+ Dim lenght As Long 'sprawdzanie dlugosci nazwy
+ Dim k1 As Integer ' kolumna nazw
+ Dim w1 As Double ' wiersz nazw
+ Dim k2 As Integer ' kolumna rp
+ Dim k3 As Integer ' kolumna komentarzy
+ Dim w2 As Double ' wiersz rp
+ Dim Cell As Range
+ ' inicjalizacja zmiennych
+ k1 = 3
+ k2 = 4
+ w1 = 2
+ w2 = 2
+ k3 = 5
+ licznik = 1
+ counter = 1
+
+
+Start:
+For Each Cell In Range("c1:c400")
+If Val(InStr(1, Cell.Text, " ")) > 0 Then
+Cell = Mid(Cell.Text, 1, InStr(1, Cell.Text, " ") - 1) & Mid(Cell.Text, InStr(1, Cell.Text, " ") + 1)
+GoTo Start
+End If
+
+Next Cell
+
+' loop sprawdzajacy czy do jednej nazwy nie przypisano dwoch routing pointow
+ Do Until counter = 500
+    Do Until licznik = 500
+      
+'       If spacyje(Sheets("TRP").Cells(w1, k1)) = True Or spacyje(Sheets("TRP").Cells(w2, k1)) = True Then
+'              If spacyje(Sheets("TRP").Cells(w1, k1)) = True Then
+'                MsgBox "ERRROR!: " & " przerwano zapis poniewaz w nazwie " & Sheets("TRP").Cells(w1, k1) & " jest spacja "
+'                Exit Sub
+'              End If
+'              If spacyje(Sheets("TRP").Cells(w2, k1)) = True Then
+'                MsgBox "ERRROR!: " & " przerwano zapis poniewaz w nazwie " & Sheets("TRP").Cells(w2, k1) & " jest spacja "
+'                Exit Sub
+'
+'              End If
+'       End If
+       If IsNumeric(Sheets("TRP").Cells(w1, k2).Value) = True And IsEmpty(Sheets("TRP").Cells(w1, k1)) = False And Range(Cells(w1, k2), Cells(w1, k1)).Borders(xlDiagonalUp).LineStyle = xlNone Then
+        If Sheets("TRP").Cells(w1, k1).Value = Sheets("TRP").Cells(w2, k1).Value Then
+           Sheets("TRP").Cells(w1, k2).Value = Trim(Sheets("TRP").Cells(w1, k2).Value) 'eliminujemy spacje w celu skutecznego porownania wartosci liczbowych
+           Sheets("TRP").Cells(w2, k2).Value = Trim(Sheets("TRP").Cells(w2, k2).Value)
+          If Sheets("TRP").Cells(w1, k2).Value <> Sheets("TRP").Cells(w2, k2).Value Then
+                   If IsEmpty(Sheets("TRP").Cells(w1, k1).Value) = True Then Sheets("TRP").Cells(w1, k1).Value = "(puste)"
+                   If IsEmpty(Sheets("TRP").Cells(w1, k2).Value) = True Then Sheets("TRP").Cells(w1, k2).Value = "(puste)"
+                   If IsEmpty(Sheets("TRP").Cells(w2, k1).Value) = True Then Sheets("TRP").Cells(w2, k2).Value = "(puste)"
+
+                   MsgBox "ERRROR!: " & " przerwano zapis poniewaz do nazwy routing point " & Sheets("TRP").Cells(w1, k1).Value & " przypisano dwie rozne wartosci " _
+                   & Sheets("TRP").Cells(w1, k2).Value & " i " & Sheets("TRP").Cells(w2, k2).Value
+                   Exit Sub
+
+           End If
+          End If
+       End If
+     w2 = w2 + 1
+     licznik = licznik + 1
+    Loop
+ w1 = w1 + 1
+ counter = counter + 1
+ licznik = 1
+ w2 = 2
+ Loop
+
+ k1 = 3
+ k2 = 4
+ w1 = 2
+ w2 = 2
+ k3 = 5
+ licznik = 1
+ counter = 1
+ 'loop sprawdzajacy czy do jednego routing pointa nie sa przypisane 2 nazwy
+  Do Until counter = 500
+    Do Until licznik = 500
+      If IsNumeric(Sheets("TRP").Cells(w1, k2).Value) = True And IsEmpty(Sheets("TRP").Cells(w1, k1)) = False And Range(Cells(w1, k2), Cells(w1, k1)).Borders(xlDiagonalUp).LineStyle = xlNone Then
+        If Sheets("TRP").Cells(w1, k2).Value = Sheets("TRP").Cells(w2, k2).Value Then
+          If Sheets("TRP").Cells(w1, k1).Value <> Sheets("TRP").Cells(w2, k1).Value Then
+                   If IsEmpty(Sheets("TRP").Cells(w1, k1).Value) = True Then Sheets("TRP").Cells(w1, k1).Value = "(puste)"
+                   If IsEmpty(Sheets("TRP").Cells(w1, k2).Value) = True Then Sheets("TRP").Cells(w1, k2).Value = "(puste)"
+                   If IsEmpty(Sheets("TRP").Cells(w2, k1).Value) = True Then Sheets("TRP").Cells(w2, k1).Value = "(puste)"
+
+                   MsgBox "ERRROR!: " & " przerwano zapis poniewaz do routing point " & Sheets("TRP").Cells(w1, k2).Value & " przypisano dwie rozne wartosci " _
+                   & Sheets("TRP").Cells(w1, k1).Value & " i " & Sheets("TRP").Cells(w2, k1).Value
+                   Exit Sub
+
+           End If
+          End If
+       End If
+       w2 = w2 + 1
+       licznik = licznik + 1
+    Loop
+ w1 = w1 + 1
+ counter = counter + 1
+ licznik = 1
+ w2 = 2
+ Loop
+
+  ' inicjalizacja zmiennych
+ k1 = 3
+ k2 = 4
+
+ k3 = 5
+ licznik = 1
+ counter = 1
+
+
+
+ Do Until licznik = 600
+    lenght = Len(Sheets("TRP").Cells(w1, k1).Value)
+            If lenght > 99 Then
+                MsgBox "ERRROR!: " & " przerwano zapis poniewaz nazwa routing point " & Sheets("TRP").Cells(w1, k1).Value & " o numerze " _
+                & Sheets("TRP").Cells(w1, k2).Value & " ma ponad 24 znaki!"
+                Exit Sub
+               End If
+    w1 = w1 + 1
+    licznik = licznik + 1
+ Loop
+
+' nazwa pliku wyjsciowego
+ sFileName = "db80"
+' ustawiamy rozszerzenie pliku i ustawiamy error zapisu
+ sFileName = Application.GetSaveAsFilename(InitialFileName:=ThisWorkbook.Path, _
+ FileFilter:="TXT (Comma delimited) (*.awl), *.awl")
+ If sFileName = "False" Then Exit Sub
+ Close
+ intFH = FreeFile()
+ Open sFileName For Output As intFH
+
+
+
+If SheetExists("garp", ActiveWorkbook) = False Then
+    Dim ws As Worksheet
+    With ThisWorkbook
+        Set ws = .Sheets.Add(After:=.Sheets(.Sheets.Count))
+        ws.Name = "garp"
+    End With
+    Range("E1").Select
+    With ActiveWindow
+        .SplitColumn = 0
+        .SplitRow = 1
+    End With
+    ActiveWindow.FreezePanes = True
+End If
+    Worksheets("garp").Cells.Delete
+    Worksheets("garp").Cells(1, 3).Value = " Targets"
+    Worksheets("garp").Cells(1, 4).Value = " Routing Code "
+    Worksheets("garp").Cells(1, 5).Value = " Comments "
+    Worksheets("garp").Columns("C:E").AutoFit
+   Worksheets("garp").Columns("D:E").HorizontalAlignment = xlCenter
+    With Worksheets("garp").Rows("1:1").Interior
+        .ThemeColor = xlThemeColorDark1
+        .TintAndShade = -0.249977111117893
+    End With
+    
+
+     ' With Worksheets("garp").Rows("1:1").Borders(xlDiagonalUp)
+    ' .LineStyle = xlContinuous
+     '.Weight = xlMedium
+     ' End With
+
+'czesc stala
+ Print #intFH, "DATA_BLOCK " & Chr(34) & "TARGETS" & Chr(34) & (Chr(13) _
+ + Chr(10)) & (Chr(13) + Chr(10)) & "TITLE " & "=" & (Chr(13) + _
+ Chr(10)) & "VERSION " & ":" & " 0.1" & Chr(10) & (Chr(13) + Chr(10)) _
+ & (Chr(13) + Chr(10)) & " STRUCT" & Chr(10)
+   
+ counter = 2
+ w1 = 2
+ w2 = 2
+'Last row target matrix
+iLastRowTRP = Sheets("TRP").Cells(65536, 3).End(xlUp).Row
+iwGarp = 2
+Do Until counter = 20000 'zakres
+ 'For i = 2 To iLastRowTRP
+    w1 = 2
+  
+    Do Until Sheets("TRP").Cells(w1, k2).Value = (counter - 1) And Range(Cells(w1, k2), Cells(w1, k2)).Borders(xlDiagonalUp).LineStyle = xlNone
+            
+           w1 = w1 + 1
+            If w1 = iLastRowTRP + 1 Then Exit Do
+         
+    Loop
+    
+    If IsEmpty(Sheets("TRP").Cells(w1, k2).Value) Then
+    Else
+    Print #intFH, "   " & Sheets("TRP").Cells(w1, k1).Value & " : " _
+    & "DINT " & ":= L#" & Sheets("TRP").Cells(w1, k2).Value & " ; " _
+    & "//" & Sheets("TRP").Cells(w1, k3).Value
+    
+    Worksheets("garp").Cells(iwGarp, k1).Value = Worksheets("TRP").Cells(w1, k1).Value
+    Worksheets("garp").Cells(iwGarp, k2).Value = Worksheets("TRP").Cells(w1, k2).Value
+    Worksheets("garp").Cells(iwGarp, k3).Value = Worksheets("TRP").Cells(w1, k3).Value
+    iwGarp = iwGarp + 1
+    End If
+counter = counter + 1
+
+ 
+'Next i
+ Loop
+'   koncowka stalego tekstu
+ 
+ Print #intFH, " END_STRUCT " & ";" & (Chr(13) + Chr(10)) & (Chr(13) _
+ + Chr(10)) & "BEGIN" & (Chr(13) + Chr(10)) & (Chr(13) + Chr(10)) _
+ & "END_DATA_BLOCK"
+ 
+ Close intFH
+ 
+ MsgBox "SUCESS!: " & " zapisano w " _
+ & sFileName & Space(10), vbOKOnly + vbInformation
+End Sub
+Function SheetExists(shtName As String, Optional wb As Workbook) As Boolean
+    Dim sht As Worksheet
+
+     If wb Is Nothing Then Set wb = ThisWorkbook
+     On Error Resume Next
+     Set sht = wb.Sheets(shtName)
+     On Error GoTo 0
+     SheetExists = Not sht Is Nothing
+End Function
+Function spacyje(rng As Excel.Range) As Boolean
+  spacyje = Not (Len(rng.Value) = Len(Trim$(rng.Value)))
+End Function
+
+
+
+
+
+
